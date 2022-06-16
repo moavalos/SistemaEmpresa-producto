@@ -5,41 +5,43 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import dominio.Cliente;
+import dominio.ConflictoDeInteresesException;
 import dominio.Director;
 import dominio.Empleado;
 import dominio.Empresa;
 import dominio.Producto;
+import dominio.ProductoNoEncontradoException;
 
 public class TestEmpresa {
 
 	@Test
 	public void crearCliente() {
-		Cliente nuevo = new Cliente(1000, "Gonzalo");
-		assertEquals((Integer) 1000, nuevo.getDni());
-		assertEquals("Gonzalo", nuevo.getNombre());
+		Cliente cliente = new Cliente(1000, "Gonzalo");
+		assertEquals((Integer) 1000, cliente.getDni());
+		assertEquals("Gonzalo", cliente.getNombre());
 	}
 
 	@Test
 	public void crearEmpleado() {
-		Empleado nuevo = new Empleado(19542876, "Celeste");
-		assertEquals((Integer) 19542876, nuevo.getDni());
-		assertEquals("Celeste", nuevo.getNombre());
+		Empleado empleado = new Empleado(19542876, "Celeste");
+		assertEquals((Integer) 19542876, empleado.getDni());
+		assertEquals("Celeste", empleado.getNombre());
 	}
 
 	@Test
 	public void crearDirector() {
-		Director nuevo = new Director(42871963, "Monica", "JJZ526");
-		assertEquals((Integer) 42871963, nuevo.getDni());
-		assertEquals("Monica", nuevo.getNombre());
-		assertEquals("JJZ526", nuevo.getPatenteCorporativa());
+		Director director = new Director(42871963, "Monica", "JJZ526");
+		assertEquals((Integer) 42871963, director.getDni());
+		assertEquals("Monica", director.getNombre());
+		assertEquals("JJZ526", director.getPatenteCorporativa());
 	}
 
 	@Test
 	public void crearProducto() {
-		Producto nuevo = new Producto(1000, "Seguro de vida", 1000.0);
-		assertEquals((Integer) 1000, nuevo.getCodigo());
-		assertEquals("Seguro de vida", nuevo.getDescripcion());
-		assertEquals((Double)1000.0, nuevo.getPrecio(), 0.01);
+		Producto producto = new Producto(1000, "Seguro de vida", 1000.0);
+		assertEquals((Integer) 1000, producto.getCodigo());
+		assertEquals("Seguro de vida", producto.getDescripcion());
+		assertEquals((Double)1000.0, producto.getPrecio(), 0.01);
 
 	}
 
@@ -64,7 +66,17 @@ public class TestEmpresa {
 	}
 
 	@Test
-	public void queUnClientePuedaComprarUnNuevoProducto() {
+	public void queUnClientePuedaComprarUnNuevoProducto() throws ConflictoDeInteresesException, ProductoNoEncontradoException{ 
+		Cliente cliente = new Cliente(1000, "Gonzalo");
+		Empresa empresita = new Empresa("Seguros Turi ip ip ip");
+		Producto productoAVender = new Producto(1000, "Seguro de vida", 1000.0);
+		
+		empresita.vincularPersona(cliente);
+		empresita.agregarProducto(productoAVender);
+		
+		empresita.registrarCompra(cliente, productoAVender);
+		
+		assertEquals((Double) 1000.0, cliente.getPrecioDelProducto(productoAVender));
 
 	}
 

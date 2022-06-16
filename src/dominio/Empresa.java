@@ -1,5 +1,6 @@
 package dominio;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Empresa {
@@ -7,11 +8,13 @@ public class Empresa {
 	private String nombre;
 	private HashSet<Persona> personas;
 	private Integer cantidadPersonasVinculadas;
+	private ArrayList<Producto> productos;
 	
 	public Empresa(String nombre) {
 		this.nombre = nombre;
 		this.personas = new HashSet<>();
 		this.cantidadPersonasVinculadas = 0;
+		this.productos = new ArrayList<Producto>();
 	}
 
 	public void vincularPersona(Persona persona) {
@@ -35,6 +38,23 @@ public class Empresa {
 
 	public void setCantidadPersonasVinculadas(Integer cantidadPersonasVinculadas) {
 		this.cantidadPersonasVinculadas = cantidadPersonasVinculadas;
+	}
+
+	public Boolean agregarProducto(Producto productoAVender) {
+		return productos.add(productoAVender);
+		
+	}
+
+	public Boolean registrarCompra(Persona comprador, Producto productoAVender) throws ConflictoDeInteresesException, ProductoNoEncontradoException {
+		if (comprador instanceof Empleado)
+			productoAVender.setPrecio(productoAVender.getPrecio()*0.80);
+		else if (comprador instanceof Director)
+			throw new ConflictoDeInteresesException();
+		else if(!this.productos.contains(productoAVender))
+			throw new ProductoNoEncontradoException();
+		
+		return comprador.agregarCompra(productoAVender);
+		
 	}
 
 }
