@@ -1,32 +1,15 @@
 package dominio;
 
-public class Director {
+public class Director extends Persona {
 
-	private Integer dni;
-	private String nombre;
 	private String patenteCorporativa;
 
 	public Director(Integer dni, String nombre, String patenteCorporativa) {
-		// TODO Auto-generated constructor stub
-		this.dni = dni;
-		this.nombre = nombre;
+		super(dni, nombre);
+		setDni(dni);
+		setNombre(nombre);
 		this.patenteCorporativa = patenteCorporativa;
-	}
-
-	public Integer getDni() {
-		return dni;
-	}
-
-	public void setDni(Integer dni) {
-		this.dni = dni;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getPatenteCorporativa() {
