@@ -9,6 +9,7 @@ import dominio.ConflictoDeInteresesException;
 import dominio.Director;
 import dominio.Empleado;
 import dominio.Empresa;
+import dominio.Persona;
 import dominio.Producto;
 import dominio.ProductoNoEncontradoException;
 
@@ -81,13 +82,34 @@ public class TestEmpresa {
 	}
 
 	@Test
-	public void queUnEmpleadoTengaUnDescuentoDelVeintePorCiento() {
-
+	public void queUnEmpleadoTengaUnDescuentoDelVeintePorCiento() throws ConflictoDeInteresesException, ProductoNoEncontradoException {
+		Persona cliente = new Empleado(1000, "Gonzalo");
+		Empresa empresita = new Empresa("Seguros Turi ip ip ip");
+		Producto productoAVender = new Producto(1000, "Seguro de vida", 1000.0);
+		
+		empresita.vincularPersona(cliente);
+		empresita.agregarProducto(productoAVender);
+		try {
+			empresita.registrarCompra(cliente, productoAVender);	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+				
+		assertEquals((Double) 800.0, cliente.getPrecioDelProducto(productoAVender));
 	}
 
-	@Test
-	public void queUnDirectorNoPuedaComprarProductosDeLaPropiaEmpresa() {
-
+	@Test (expected = ConflictoDeInteresesException.class)
+	public void queUnDirectorNoPuedaComprarProductosDeLaPropiaEmpresa() throws ConflictoDeInteresesException, ProductoNoEncontradoException{
+		Persona director = new Director(44777888, "Pepa", "AA763H");
+		Empresa empresita = new Empresa("Seguros Turi ip ip ip");
+		Producto productoAVender = new Producto(1000, "Seguro de vida", 1000.0);
+		
+		empresita.vincularPersona(director);
+		empresita.agregarProducto(productoAVender);
+		
+		empresita.registrarCompra(director, productoAVender);
+		
+		assertEquals((Double) 1000.0, director.getPrecioDelProducto(productoAVender));
 	}
 
 }
